@@ -9,7 +9,12 @@
 //检查是否连接设备
 checkDeviceAttached();
 
-$path = '/home/chenlei/MEGAsync/文件/安卓应用编译/compiled.txt';
+$path = '/home/lei/MEGAsync/文件/安卓应用编译/compiled.txt';
+
+if (!file_exists($path)) {
+    echo 'file not exists, exit...';
+    exit;
+}
 
 $compiled_pack = json_decode(file_get_contents($path), true);
 
@@ -21,18 +26,19 @@ foreach ($packages as $p => $ver) {
     if (checkExcept($p)) {
         continue;
     }
+
     if (!isset($compiled_pack[$p]) || $compiled_pack[$p] != $ver) {
         $i++;
         $compiled_pack[$p] = $ver;
         compile($p);
     }
 }
-echo 'compiled ' . $i . 'packages', PHP_EOL;
+echo 'compiled ' . $i . ' packages', PHP_EOL;
 if ($i) {
     file_put_contents($path, json_encode($compiled_pack));
 }
 
-//shell_exec('adb reboot');
+shell_exec('adb reboot');
 
 function checkDeviceAttached()
 {
@@ -48,11 +54,11 @@ function checkDeviceAttached()
 function checkExcept(string $line): bool
 {
     if (
-        strpos($line, 'ui') !== false
-        || strpos($line, 'samsung') !== false
+        //strpos($line, 'ui') !== false
+        (strpos($line, 'samsung') !== false
+            && (strpos($line, 'bixby') === false || strpos($line, 'knox') === false)
+        )
         || strpos($line, 'desktop') !== false
-        || strpos($line, 'bixby') !== false
-        || strpos($line, 'knox') !== false
     ) {
         return true;
     }
