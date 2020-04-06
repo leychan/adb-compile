@@ -12,8 +12,7 @@ checkDeviceAttached();
 $path = '/home/lei/MEGAsync/文件/安卓应用编译/compiled.txt';
 
 if (!file_exists($path)) {
-    echo 'file not exists, exit...';
-    exit;
+    echo 'file not exists, new file will be created when compiling is done', PHP_EOL;
 }
 
 $compiled_pack = json_decode(file_get_contents($path), true);
@@ -54,11 +53,9 @@ function checkDeviceAttached()
 function checkExcept(string $line): bool
 {
     if (
-        //strpos($line, 'ui') !== false
-        (strpos($line, 'samsung') !== false
-            && (strpos($line, 'bixby') === false || strpos($line, 'knox') === false)
-        )
+        strpos($line, 'systemui') !== false
         || strpos($line, 'desktop') !== false
+        || strpos($line, 'launcher') !== false
     ) {
         return true;
     }
