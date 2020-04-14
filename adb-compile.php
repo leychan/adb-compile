@@ -9,7 +9,9 @@
 //检查是否连接设备
 checkDeviceAttached();
 
-$path = '/home/lei/MEGAsync/文件/安卓应用编译/compiled.txt';
+$user = getUser();
+
+$path = "/home/{$user}/MEGAsync/文件/安卓应用编译/compiled.txt";
 
 if (!file_exists($path)) {
     echo 'file not exists, new file will be created when compiling is done', PHP_EOL;
@@ -138,4 +140,8 @@ function allPackages() {
         $return[$p] = $version;
     }
     return $return;
+}
+
+function getUser() {
+    return trim(shell_exec('echo $USER'));
 }
