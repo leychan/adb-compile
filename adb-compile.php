@@ -39,7 +39,9 @@ if ($i) {
     file_put_contents($path, json_encode($compiled_pack));
 }
 
-shell_exec('adb reboot');
+if ($i >= 10) {
+    shell_exec('adb reboot');
+}
 
 function checkDeviceAttached()
 {
