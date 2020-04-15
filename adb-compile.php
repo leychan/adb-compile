@@ -56,11 +56,11 @@ function checkDeviceAttached()
 
 function checkExcept(string $line): bool
 {
-    if (
-        strpos($line, 'systemui') !== false
-        || strpos($line, 'desktop') !== false
-        || strpos($line, 'launcher') !== false
-    ) {
+    $except_arr = [
+        'com.sec.android.app.launcher',
+        'com.android.systemui'
+    ];
+    if (in_array($line, $except_arr)) {
         return true;
     }
     return false;
