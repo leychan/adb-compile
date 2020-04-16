@@ -57,7 +57,6 @@ function checkDeviceAttached()
 function checkExcept(string $line): bool
 {
     $except_arr = [
-        'com.sec.android.app.launcher',
         'com.android.systemui'
     ];
     if (in_array($line, $except_arr)) {
