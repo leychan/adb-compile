@@ -21,17 +21,21 @@ $compiled_pack = json_decode(file_get_contents($path), true);
 
 $packages = allPackages();
 
+$total = count($packages);
 $i = 0;
+$j = 0;
 
 foreach ($packages as $p => $ver) {
+    $j++;
+    echo '当前进度' . $j . '/' . $total, PHP_EOL;
     if (checkExcept($p)) {
         continue;
     }
 
     if (!isset($compiled_pack[$p]) || $compiled_pack[$p] != $ver) {
-        $i++;
         $compiled_pack[$p] = $ver;
         compile($p);
+        $i++;
     }
 }
 echo 'compiled ' . $i . ' packages', PHP_EOL;
@@ -131,7 +135,8 @@ function compile($p)
     echo shell_exec($exec), PHP_EOL;
 }
 
-function allPackages() {
+function allPackages()
+{
     $raw = shell_exec('adb shell pm list package');
     $raw_arr = explode(PHP_EOL, $raw);
     $packages = array_map("formatPackageName", $raw_arr);
@@ -143,6 +148,7 @@ function allPackages() {
     return $return;
 }
 
-function getUser() {
+function getUser()
+{
     return trim(shell_exec('echo $USER'));
 }
