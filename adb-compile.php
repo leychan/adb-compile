@@ -17,17 +17,21 @@ if (!file_exists($path)) {
     echo 'file not exists, new file will be created when compiling is done', PHP_EOL;
 }
 
+echo '读取编译记录...', PHP_EOL;
 $compiled_pack = json_decode(file_get_contents($path), true);
 
+echo '读取安装的应用程序记录...', PHP_EOL;
 $packages = allPackages();
 
 $total = count($packages);
-$i = 0;
-$j = 0;
+echo '总共安装',$total,'个程序', PHP_EOL;
+
+$i = 0; //编译数量
+$j = 0; //进度标识
 
 foreach ($packages as $p => $ver) {
     $j++;
-    echo '当前进度' . $j . '/' . $total, PHP_EOL;
+    echo '当前进度: ', $j, '/', $total, PHP_EOL;
     if (checkExcept($p)) {
         continue;
     }
@@ -38,7 +42,8 @@ foreach ($packages as $p => $ver) {
         $i++;
     }
 }
-echo 'compiled ' . $i . ' packages', PHP_EOL;
+echo 'compiled ', $i, ' packages', PHP_EOL;
+
 if ($i) {
     file_put_contents($path, json_encode($compiled_pack));
 }
@@ -49,9 +54,8 @@ if ($i >= 10) {
 
 function checkDeviceAttached()
 {
-    $str = shell_exec("adb devices");
-    $arr = explode(PHP_EOL, $str);
-    if (!isset($arr[1]) && strpos($arr[1], 'device') === false) {
+    exec("adb devices", $arr);
+    if (!isset($arr[1]) || strpos($arr[1], 'device') === false) {
         echo 'no device found, exit.';
         exit;
     }
@@ -72,18 +76,9 @@ function checkExcept(string $line): bool
 function getAppVersionInfo($line)
 {
     $shell = 'adb shell dumpsys package ' . $line . ' | grep versionName';
-    $version_str = shell_exec($shell);
-    $version_arr = explode(PHP_EOL, $version_str);
+    exec($shell, $version_arr);
     $version_arr = filterVersion($version_arr);
-    $version_real = '';
-    foreach ($version_arr as $version) {
-        $version = formatVersion($version);
-        if (empty($version)) {
-            $version_real = $version;
-            continue;
-        }
-        $version_real = compareVersion($version_real, $version);
-    }
+    $version_real = formatVersion($version_arr[0]);
     return $version_real;
 }
 
@@ -125,7 +120,8 @@ function formatVersion($version)
 
 function formatPackageName($line)
 {
-    return trim(str_replace('package:', '', $line));
+    return substr($line, 8);
+    //return trim(str_replace('package:', '', $line));
 }
 
 function compile($p)
@@ -137,18 +133,20 @@ function compile($p)
 
 function allPackages()
 {
-    $raw = shell_exec('adb shell pm list package');
-    $raw_arr = explode(PHP_EOL, $raw);
-    $packages = array_map("formatPackageName", $raw_arr);
+    $time = time();
+    exec('adb shell pm list package', $raw);
+    $packages = array_map("formatPackageName", $raw);
     $return = [];
     foreach ($packages as $p) {
         $version = getAppVersionInfo($p);
         $return[$p] = $version;
     }
+    echo '读取安装的应用程序记录花费', time() - $time, 's', PHP_EOL;
     return $return;
 }
 
 function getUser()
 {
-    return trim(shell_exec('echo $USER'));
+    exec('echo $USER', $user);
+    return $user[0];
 }
