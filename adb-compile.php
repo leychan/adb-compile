@@ -147,6 +147,5 @@ function allPackages()
 
 function getUser()
 {
-    exec('echo $USER', $user);
-    return $user[0];
+    return getenv('USER');
 }
