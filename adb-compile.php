@@ -24,7 +24,7 @@ echo '读取安装的应用程序记录...', PHP_EOL;
 $packages = allPackages();
 
 $total = count($packages);
-echo '总共安装',$total,'个程序', PHP_EOL;
+echo '总共安装', $total, '个程序', PHP_EOL;
 
 $i = 0; //编译数量
 $j = 0; //进度标识
