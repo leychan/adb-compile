@@ -121,7 +121,7 @@ function formatVersion($version)
 
 function formatPackageName($line)
 {
-    return substr($line, 8);
+    return strlen($line) > 8 ? substr($line, 8) : '';
     //return trim(str_replace('package:', '', $line));
 }
 
