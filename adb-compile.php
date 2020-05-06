@@ -26,26 +26,35 @@ $packages = allPackages();
 $total = count($packages);
 echo '总共安装', $total, '个程序', PHP_EOL;
 
-$i = 0; //编译数量
-$j = 0; //进度标识
-
+$should_compile = [];
+// 对比版本号, 找出需要编译的应用程序
 foreach ($packages as $p => $ver) {
-    $j++;
-    echo '当前进度: ', $j, '/', $total, PHP_EOL;
     if (checkExcept($p)) {
         continue;
     }
-
     if (!isset($compiled_pack[$p]) || $compiled_pack[$p] != $ver) {
+        //新版本号写入记录
         $compiled_pack[$p] = $ver;
-        compile($p);
-        $i++;
+        array_push($should_compile, $p);
     }
 }
-echo 'compiled ', $i, ' packages', PHP_EOL;
 
-if ($i) {
+//需要编译的应用程序数量
+$should_compile_num = count($should_compile);
+
+echo '需要编译' . $should_compile_num . '应用程序', PHP_EOL;
+
+if ($should_compile_num > 0) {
+    for ($i = 0; $i < $should_compile_num; $i++) {
+        echo '当前进度: ' . $i . '/' . $should_compile_num, PHP_EOL;
+        compile($should_compile[$i]);
+    }
+
+    echo 'compiled ', $i, ' packages', PHP_EOL;
+
     file_put_contents($path, json_encode($compiled_pack));
+} else {
+    echo '无需要编译的应用程序', PHP_EOL;
 }
 
 echo 'all done.';
@@ -81,26 +90,6 @@ function getAppVersionInfo($line)
     $version_arr = filterVersion($version_arr);
     $version_real = formatVersion($version_arr[0]);
     return $version_real;
-}
-
-function compareVersion($version1, $version2)
-{
-    if ($version1 == $version2) {
-        return $version1;
-    }
-    $v1 = explode('.', $version1);
-    $v2 = explode('.', $version2);
-    $len = count($v1) > count($v2) ? count($v1) : count($v2);
-    for ($i = 0; $i < $len; $i++) {
-        if (isset($v1[$i]) && isset($v2[$i]) && $v1[$i] != $v2[$i]) {
-            return $v1[$i] > $v2[$i] ? $version1 : $version2;
-        } else {
-            if (!isset($v1[$i])) {
-                return $version2;
-            }
-            return $version1;
-        }
-    }
 }
 
 function filterVersion($version_arr)
