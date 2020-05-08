@@ -53,6 +53,13 @@ if ($should_compile_num > 0) {
     echo 'compiled ', $i, ' packages', PHP_EOL;
 
     file_put_contents($path, json_encode($compiled_pack));
+
+    echo '正在停止新编译应用程序...';
+    for ($i = 0; $i < $should_compile_num; $i++) {
+        echo '当前进度: ' . $i . '/' . $should_compile_num, PHP_EOL;
+        stopApp($should_compile[$i]);
+    }
+
 } else {
     echo '无需要编译的应用程序', PHP_EOL;
 }
@@ -118,6 +125,12 @@ function compile($p)
 {
     echo $p, PHP_EOL;
     $exec = 'adb shell cmd package compile -m everything -f ' . $p;
+    echo shell_exec($exec), PHP_EOL;
+}
+
+function stopApp($p) {
+    echo '正在停止' . $p . PHP_EOL;
+    $exec = 'adb shell am force-stop ' . $p;
     echo shell_exec($exec), PHP_EOL;
 }
 
