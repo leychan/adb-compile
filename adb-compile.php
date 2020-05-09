@@ -130,7 +130,7 @@ function compile($p)
 
 function stopApp($p) {
     echo '正在停止' . $p . PHP_EOL;
-    $exec = 'adb shell am force-stop ' . $p;
+    $exec = 'adb shell am kill ' . $p;
     echo shell_exec($exec), PHP_EOL;
 }
 
