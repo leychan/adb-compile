@@ -47,7 +47,7 @@ echo '需要编译' . $should_compile_num . '应用程序', PHP_EOL;
 if ($should_compile_num > 0) {
     for ($i = 0; $i < $should_compile_num; $i++) {
         compile($should_compile[$i]);
-        echo '当前进度: ' . $i . '/' . $should_compile_num, PHP_EOL;
+        echo '当前进度: ' . ($i + 1) . '/' . $should_compile_num, PHP_EOL;
     }
 
     echo 'compiled ', $i, ' packages', PHP_EOL;
@@ -56,8 +56,8 @@ if ($should_compile_num > 0) {
 
     echo '正在停止新编译应用程序...';
     for ($i = 0; $i < $should_compile_num; $i++) {
-        echo '当前进度: ' . ($i + 1) . '/' . $should_compile_num, PHP_EOL;
         stopApp($should_compile[$i]);
+        echo '当前进度: ' . ($i + 1) . '/' . $should_compile_num, PHP_EOL;
     }
 
 } else {
