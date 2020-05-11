@@ -54,7 +54,7 @@ if ($should_compile_num > 0) {
 
     file_put_contents($path, json_encode($compiled_pack));
 
-    echo '正在停止新编译应用程序...';
+    echo PHP_EOL, '正在停止新编译应用程序...', PHP_EOL;
     for ($i = 0; $i < $should_compile_num; $i++) {
         stopApp($should_compile[$i]);
         echo '当前进度: ' . ($i + 1) . '/' . $should_compile_num, PHP_EOL;
