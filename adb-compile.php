@@ -47,7 +47,7 @@ echo '需要编译' . $should_compile_num . '应用程序', PHP_EOL;
 if ($should_compile_num > 0) {
     for ($i = 0; $i < $should_compile_num; $i++) {
         compile($should_compile[$i]);
-        echo '当前进度: ' . ($i + 1) . '/' . $should_compile_num, PHP_EOL;
+        echo '当前进度: ' . ($i + 1) . '/' . $should_compile_num, PHP_EOL, PHP_EOL;
     }
 
     echo 'compiled ', $i, ' packages', PHP_EOL;
@@ -57,7 +57,7 @@ if ($should_compile_num > 0) {
     echo PHP_EOL, '正在停止新编译应用程序...', PHP_EOL;
     for ($i = 0; $i < $should_compile_num; $i++) {
         stopApp($should_compile[$i]);
-        echo '当前进度: ' . ($i + 1) . '/' . $should_compile_num, PHP_EOL;
+        echo '当前进度: ' . ($i + 1) . '/' . $should_compile_num, PHP_EOL, PHP_EOL;
     }
 
 } else {
@@ -125,13 +125,13 @@ function compile($p)
 {
     echo $p, PHP_EOL;
     $exec = 'adb shell cmd package compile -m everything -f ' . $p;
-    echo shell_exec($exec), PHP_EOL;
+    echo shell_exec($exec);
 }
 
 function stopApp($p) {
     echo '正在停止' . $p . PHP_EOL;
     $exec = 'adb shell am kill ' . $p;
-    echo shell_exec($exec), PHP_EOL;
+    echo shell_exec($exec);
 }
 
 function allPackages()
