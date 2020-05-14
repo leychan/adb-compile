@@ -42,7 +42,7 @@ foreach ($packages as $p => $ver) {
 //需要编译的应用程序数量
 $should_compile_num = count($should_compile);
 
-echo '需要编译' . $should_compile_num . '应用程序', PHP_EOL;
+echo '需要编译' . $should_compile_num . '应用程序', PHP_EOL,PHP_EOL;
 
 if ($should_compile_num > 0) {
     for ($i = 0; $i < $should_compile_num; $i++) {
@@ -123,7 +123,7 @@ function formatPackageName($line)
 
 function compile($p)
 {
-    echo $p, PHP_EOL;
+    echo '正在编译 ', $p, PHP_EOL;
     $exec = 'adb shell cmd package compile -m everything -f ' . $p;
     echo shell_exec($exec);
 }
