@@ -82,7 +82,8 @@ function checkDeviceAttached()
 function checkExcept(string $line): bool
 {
     $except_arr = [
-        'com.android.systemui'
+        'com.android.systemui',
+        'com.samsung.android.soundassistant'
     ];
     if (in_array($line, $except_arr)) {
         return true;
