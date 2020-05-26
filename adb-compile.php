@@ -65,6 +65,9 @@ if ($should_compile_num > 0) {
 }
 
 echo 'all done.';
+if (getenv()['XDG_CURRENT_DESKTOP'] == 'KDE') {
+    shell_exec('/usr/bin/notify-send all done');
+}
 //if ($i >= 10) {
 //    shell_exec('adb reboot');
 //}
