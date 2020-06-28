@@ -128,7 +128,7 @@ function formatPackageName($line)
 function compile($p)
 {
     echo '正在编译 ', $p, PHP_EOL;
-    $exec = 'adb shell cmd package compile -m speed -f ' . $p;
+    $exec = 'adb shell cmd package compile -m everything -f ' . $p;
     echo shell_exec($exec);
 }
 
